@@ -33,11 +33,10 @@ TO DO: Put more details.
 @"%SystemRoot%\System32\WindowsPowerShell\v1.0\powershell.exe" -NoProfile -InputFormat None -ExecutionPolicy Bypass -Command "iex ((New-Object System.Net.WebClient).DownloadString('https://chocolatey.org/install.ps1'))" && SET "PATH=%PATH%;%ALLUSERSPROFILE%\chocolatey\bin"
 ```
 
-2. On the same cmd, run:
+2. On the same *cmd*, run:
 ```
 choco install kubernetes-cli
 ```
-
 
 #### Get the Settings from the Master
 1. Go to the Master
@@ -46,10 +45,27 @@ choco install kubernetes-cli
 cd /etc/kubernetes
 cat kubelet.conf
 ```
-3. Go to the local machine, and run:
-``
-scp root@<IP_MACHINE_HERE>:/etc/kubernetes/kubelet.conf
+3. Go to the local machine, and run for obtaining the config file from the master node:
 ```
+scp root@<IP_MACHINE_HERE>:/etc/kubernetes/kubelet.conf .
+```
+
+4. Get the master configuration to the a specific folder:
+```
+cd %HOMEPATH%
+mkdir .kube
+move kubelet.conf .kube
+del kubelet.conf
+```
+
+5. Try it out with some commands:
+```
+kubectl.exe get nodes
+kubectl get pods --all-namespaces
+```
+You must get something like this:
+
+![test-kubectl-local](resources/test-kubectl-local.png)
 
 ## License
 
