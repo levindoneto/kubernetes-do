@@ -1,6 +1,6 @@
 # Kubernetes DO Configuration
 
-Repository containing some theory about Kubernetes and how to set up a master and a node using it on Digital Ocean infrastructure provider. All these steps may change as the time goes by, so have in mind that these steps were executed by [me](https://www.linkedin.com/in/levindo) in January 2019.
+Repository containing some theory about Kubernetes and how to set up a master and a node using it on the Digital Ocean infrastructure provider. All these steps may change as the time goes by, so have in mind that these steps were executed by [me](https://www.linkedin.com/in/levindo) in January 2019.
 
 **Author:** Levindo Gabriel Taschetto Neto.
 
@@ -61,7 +61,8 @@ del kubelet.conf
 5. Try it out with some commands:
 ```
 kubectl.exe get nodes
-kubectl get pods --all-namespaces
+kubectl.exe get pods --all-namespaces
+kubectl.exe cluster-info
 ```
 You must get something like this:
 
