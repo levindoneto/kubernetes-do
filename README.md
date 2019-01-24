@@ -60,13 +60,58 @@ del kubelet.conf
 
 5. Try it out with some commands:
 ```
-kubectl.exe get nodes
-kubectl.exe get pods --all-namespaces
-kubectl.exe cluster-info
+kubectl get nodes
+kubectl get pods --all-namespaces
+kubectl cluster-info
 ```
 You must get something like this:
 
 ![test-kubectl-local](resources/test-kubectl-local.png)
+
+## Install and run the Dashboard
+1.  Donwload the Dashboard (Link updated in 01/2019)
+```
+kubectl create -f https://raw.githubusercontent.com/kubernetes/dashboard/master/aio/deploy/recommended/kubernetes-dashboard.yaml --namespace=kube-system
+```
+
+2.  Set it up
+```
+vi dashboard-admin.yaml
+```
+Copy the content from [dashboard-admin.yaml](dashboard/dashboard-admin.yaml) and paste it in the created file.
+
+```
+kubectl create -f dashboard-admin.yaml --validate=false
+```
+
+3.  For getting the Kubernetes proxy command to run in the background:
+```
+nohup kubectl proxy --address="157.230.190.111" -p 443 --accept-hosts='^*$' &
+```
+
+4.  This error may appear if you have not configured properly the dashboard-admin file:
+```json
+{
+  "kind": "Status",
+  "apiVersion": "v1",
+  "metadata": {
+
+  },
+  "status": "Failure",
+  "message": "forbidden: User \"system:node:master-1\" cannot get path \"/\"",
+  "reason": "Forbidden",
+  "details": {
+
+  },
+  "code": 403
+}
+```
+
+## How to Use the Dashboard
+
+1.  Access the dashboard on [http://157.230.190.111:443/api/v1/namespaces/kube-system/services/https:kubernetes-dashboard:/proxy/#!/login](http://157.230.190.111:443/api/v1/namespaces/kube-system/services/https:kubernetes-dashboard:/proxy/#!/login). Then, the following page must show up on your browser:
+
+![dashboard](resources/dashboard.png)
 
 ## License
 

@@ -5,7 +5,7 @@
 # Updated in January 2019
 
 export MASTER_IP=<IP_MACHINE_HERE>
-apt-get update && apt-get upgrade -y 
+apt-get update && apt-get upgrade -y
 curl -s https://packages.cloud.google.com/apt/doc/apt-key.gpg | apt-key add -
 
 cat <<EOF > /etc/apt/sources.list.d/kubernetes.list
@@ -32,9 +32,3 @@ export KUBECONFIG=$HOME/admin.conf
 
 # Get Flannel
 curl -sSL "https://github.com/coreos/flannel/blob/master/Documentation/kube-flannel.yml?raw=true" | kubectl --namespace=kube-system create -f -
-
-# Install dashboard
-kubectl create -f https://raw.githubusercontent.com/kubernetes/dashboard/master/aio/deploy/recommended/kubernetes-dashboard.yaml --namespace=kube-system
-
-# To check out the created pods
-kubectl get pods --all-namespaces
