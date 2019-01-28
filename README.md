@@ -2,6 +2,8 @@
 
 Repository containing some theory about Kubernetes and how to set up a master and a node using it on the Digital Ocean infrastructure provider. All these steps may change as the time goes by, so have in mind that these steps were executed by [me](https://www.linkedin.com/in/levindo) in January 2019.
 
+*“Any sufficiently advanced technology is indistinguishable from magic." - A.C. Clarke*
+
 **Author:** Levindo Gabriel Taschetto Neto.
 
 ## Theory
@@ -35,34 +37,36 @@ TO DO: Put more details.
 
 2. On the same *cmd*, run:
 ```
-choco install kubernetes-cli
+$ choco install kubernetes-cli
 ```
 
 #### Get the Settings from the Master
 1. Go to the Master
 2. Run the following commands to see if you've got what it takes!:
 ```
-cd /etc/kubernetes
-cat kubelet.conf
+$ cd /etc/kubernetes
+$ cat kubelet.conf
 ```
 3. Go to the local machine, and run for obtaining the config file from the master node:
 ```
-scp root@<IP_MACHINE_HERE>:/etc/kubernetes/kubelet.conf .
+$ cd %HOMEPATH%
+$ scp root@<IP_MACHINE_HERE>:/etc/kubernetes/admin.conf .
 ```
 
 4. Get the master configuration to the a specific folder:
 ```
-cd %HOMEPATH%
-mkdir .kube
-move kubelet.conf .kube
-del kubelet.conf
+$ mkdir .kube
+$ move admin.conf .kube
+$ cd .kube
+$ ren admin.conf config
+$ del admin.conf
 ```
 
 5. Try it out with some commands:
 ```
-kubectl get nodes
-kubectl get pods --all-namespaces
-kubectl cluster-info
+$ kubectl get nodes
+$ kubectl get pods --all-namespaces
+$ kubectl cluster-info
 ```
 You must get something like this:
 
@@ -71,22 +75,22 @@ You must get something like this:
 ## Install and run the Dashboard
 1.  Donwload the Dashboard (Link updated in 01/2019)
 ```
-kubectl create -f https://raw.githubusercontent.com/kubernetes/dashboard/master/aio/deploy/recommended/kubernetes-dashboard.yaml --namespace=kube-system
+$ kubectl create -f https://raw.githubusercontent.com/kubernetes/dashboard/master/aio/deploy/recommended/kubernetes-dashboard.yaml --namespace=kube-system
 ```
 
 2.  Set it up
 ```
-vi dashboard-admin.yaml
+$ vi dashboard-admin.yaml
 ```
 Copy the content from [dashboard-admin.yaml](dashboard/dashboard-admin.yaml) and paste it in the created file.
 
 ```
-kubectl create -f dashboard-admin.yaml --validate=false
+$ kubectl create -f dashboard-admin.yaml --validate=false
 ```
 
 3.  For getting the Kubernetes proxy command to run in the background:
 ```
-nohup kubectl proxy --address="157.230.190.111" -p 443 --accept-hosts='^*$' &
+$ nohup kubectl proxy --address="157.230.190.111" -p 443 --accept-hosts='^*$' &
 ```
 
 4.  This error may appear if you have not configured properly the dashboard-admin file:
@@ -112,6 +116,18 @@ nohup kubectl proxy --address="157.230.190.111" -p 443 --accept-hosts='^*$' &
 1.  Access the dashboard on [http://157.230.190.111:443/api/v1/namespaces/kube-system/services/https:kubernetes-dashboard:/proxy/#!/login](http://157.230.190.111:443/api/v1/namespaces/kube-system/services/https:kubernetes-dashboard:/proxy/#!/login). Then, the following page must show up on your browser:
 
 ![dashboard](resources/dashboard.png)
+
+2.  On the master, create an admin user by doing the following commands:
+```
+$ kubectl apply -f https://gist.githubusercontent.com/levindoneto/e06b16e54a36cb4bb0bb39fa1f661aad/raw/17c33908f886a6f4265dd63a389a277fed82e685/admin.yaml
+$ kubectl get sa admin-user -n kube-system
+$ kubectl describe sa admin-user -n kube-system
+$ kubectl describe secret  admin-user-token-rcvnf -n kube-system
+```
+
+The *admin-user-token-rcvnf* is what appears next to *Tokens:* when the command `kubectl describe sa admin-user -n kube-system` is executed.
+
+3. Get then the token next to *token:*.
 
 ## License
 

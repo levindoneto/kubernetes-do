@@ -26,9 +26,7 @@ kubeadm init --pod-network-cidr=10.244.0.0/16  --apiserver-advertise-address $MA
 # If these commands are not run you'd get:
 # 'The connection to the server localhost:8080 was refused
 #  - did you specify the right host or port?'
-cp /etc/kubernetes/admin.conf $HOME/
-chown $(id -u):$(id -g) $HOME/admin.conf
-export KUBECONFIG=$HOME/admin.conf
+sh always-needed-master.sh
 
 # Get Flannel
 curl -sSL "https://github.com/coreos/flannel/blob/master/Documentation/kube-flannel.yml?raw=true" | kubectl --namespace=kube-system create -f -

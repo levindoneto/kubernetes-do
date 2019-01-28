@@ -14,5 +14,7 @@ EOF
 apt-get update -y
 apt-get install -y docker.io kubelet kubeadm kubectl kubernetes-cni
 
+kubeadm reset # Used in case you had already connected the node to another master
+
 # Join to the created master (this command is given at the master at the end of the setup, just copy it and paste it below
 kubeadm join <IP_MACHINE_HERE>:6443 --token <GENEREATED_TOKEN_1> --discovery-token-ca-cert-hash sha256:49<GENEREATED_TOKEN_2>
