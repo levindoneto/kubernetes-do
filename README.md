@@ -78,51 +78,55 @@ You must get something like this:
 This action may be performed from your local machine if you have already configured *kubectl* and the *config* from master on it.
 More details can be accessed on the section *How to Access the Cluster from a Local Machine** a little bit up in this readme :)
 ```
-$ kubectl create -f dashboard/dashboard-admin.yaml --namespace=kube-system
+$ kubectl create -f dashboard/dash-admin-token.yaml --namespace=kube-system
 ```
 
-2.  Init the proxy
+2.  Go to the **master**, and run the following command:
+```
+$ kubectl -n kube-system describe secret $(kubectl -n kube-system get secret | grep admin-user | awk '{print $1}')
+```
+
+You're gonna get something similar to this:
+```
+Name:         admin-user-token-q79hm
+Namespace:    kube-system
+Labels:       <none>
+Annotations:  kubernetes.io/service-account.name: admin-user
+              kubernetes.io/service-account.uid: uid_here
+
+Type:  kubernetes.io/service-account-token
+
+Data
+====
+namespace:  11 bytes
+token:      TOKEN_HERE
+ca.crt:     1025 bytes
+```
+
+Copy everything in **TOKEN_HERE**.
+
+3.  Init the proxy
 ```
 $ kubectl proxy
 ```
 
-After this, you may locally access the dashboard by simply going to [this link](http://localhost:8001/api/v1/namespaces/kube-system/services/https:kubernetes-dashboard:/proxy/#!/login).
-
-3.  This error may appear if you have not configured properly the dashboard-admin file:
-```json
-{
-  "kind": "Status",
-  "apiVersion": "v1",
-  "metadata": {
-
-  },
-  "status": "Failure",
-  "message": "forbidden: User \"system:node:master-1\" cannot get path \"/\"",
-  "reason": "Forbidden",
-  "details": {
-
-  },
-  "code": 403
-}
-```
+4.  Go to [this link](http://localhost:8001/api/v1/namespaces/kube-system/services/https:kubernetes-dashboard:/proxy/#!/login).
 
 ## How to Use the Dashboard
 
-1.  Access the dashboard on [http://157.230.190.111:443/api/v1/namespaces/kube-system/services/https:kubernetes-dashboard:/proxy/#!/login](http://157.230.190.111:443/api/v1/namespaces/kube-system/services/https:kubernetes-dashboard:/proxy/#!/login). Then, the following page must show up on your browser:
+1.  Access the dashboard on [http://localhost:8001/api/v1/namespaces/kube-system/services/https:kubernetes-dashboard:/proxy/#!/login](http://localhost:8001/api/v1/namespaces/kube-system/services/https:kubernetes-dashboard:/proxy/#!/login). Then, the following page must show up on your browser:
 
 ![dashboard](resources/dashboard.png)
 
-2.  On the master, create an admin user by doing the following commands:
-```
-$ kubectl apply -f https://gist.githubusercontent.com/levindoneto/e06b16e54a36cb4bb0bb39fa1f661aad/raw/17c33908f886a6f4265dd63a389a277fed82e685/admin.yaml
-$ kubectl get sa admin-user -n kube-system
-$ kubectl describe sa admin-user -n kube-system
-$ kubectl describe secret  admin-user-token-rcvnf -n kube-system
-```
+2.  Choose the option *Token*, paste *TOKEN_HERE* into the input box and click the button *Sign In*.
 
-The *admin-user-token-rcvnf* is what appears next to *Tokens:* when the command `kubectl describe sa admin-user -n kube-system` is executed.
+3.  The dashboard may then show up as follows:
 
-3. Get then the token next to *token:*.
+![dashboard-home](resources/dashboard-home.png)
+
+4.  We can also verify our created master-1 and node-1 by going to the Nodes page:
+
+![kube-nodes](resources/kube-nodes.png)
 
 ## License
 
