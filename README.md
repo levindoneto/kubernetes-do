@@ -41,19 +41,20 @@ $ choco install kubernetes-cli
 ```
 
 #### Get the Settings from the Master
-1. Go to the Master
-2. Run the following commands to see if you've got what it takes!:
+##### 1. Go to the Master
+##### 2. Run the following commands to see if you've got what it takes!
 ```
 $ cd /etc/kubernetes
 $ cat kubelet.conf
 ```
-3. Go to the local machine, and run for obtaining the config file from the master node:
+
+##### 3. Go to the local machine, and run for obtaining the config file from the master node
 ```
 $ cd %HOMEPATH%
 $ scp root@<IP_MACHINE_HERE>:/etc/kubernetes/admin.conf .
 ```
 
-4. Get the master configuration to the a specific folder:
+##### 4. Get the master configuration to the a specific folder
 ```
 $ mkdir .kube
 $ move admin.conf .kube
@@ -62,7 +63,7 @@ $ ren admin.conf config
 $ del admin.conf
 ```
 
-5. Try it out with some commands:
+##### 5. Try it out with some commands
 ```
 $ kubectl get nodes
 $ kubectl get pods --all-namespaces
@@ -73,7 +74,7 @@ You must get something like this:
 ![test-kubectl-local](resources/test-kubectl-local.png)
 
 ## Install and run the Dashboard
-1.  Donwload the Dashboard (Link updated in 01/2019)
+### 1. Get the Dashboard
 
 This action may be performed from your local machine if you have already configured *kubectl* and the *config* from master on it.
 More details can be accessed on the section *How to Access the Cluster from a Local Machine** a little bit up in this readme :)
@@ -81,7 +82,7 @@ More details can be accessed on the section *How to Access the Cluster from a Lo
 $ kubectl create -f dashboard/dash-admin-token.yaml --namespace=kube-system
 ```
 
-2.  Go to the **master**, and run the following command:
+### 2. Go to the **master**, and run the following command:
 ```
 $ kubectl -n kube-system describe secret $(kubectl -n kube-system get secret | grep admin-user | awk '{print $1}')
 ```
@@ -105,26 +106,26 @@ ca.crt:     1025 bytes
 
 Copy everything in **TOKEN_HERE**.
 
-3.  Init the proxy
+### 3.  Init the proxy
 ```
 $ kubectl proxy
 ```
 
-4.  Go to [this link](http://localhost:8001/api/v1/namespaces/kube-system/services/https:kubernetes-dashboard:/proxy/#!/login).
+## How to Access the Dashboard
 
-## How to Use the Dashboard
-
-1.  Access the dashboard on [http://localhost:8001/api/v1/namespaces/kube-system/services/https:kubernetes-dashboard:/proxy/#!/login](http://localhost:8001/api/v1/namespaces/kube-system/services/https:kubernetes-dashboard:/proxy/#!/login). Then, the following page must show up on your browser:
+### 1.  Access the dashboard
+On [http://localhost:8001/api/v1/namespaces/kube-system/services/https:kubernetes-dashboard:/proxy/#!/login](http://localhost:8001/api/v1/namespaces/kube-system/services/https:kubernetes-dashboard:/proxy/#!/login). Then, the following page must show up on your browser:
 
 ![dashboard](resources/dashboard.png)
 
-2.  Choose the option *Token*, paste *TOKEN_HERE* into the input box and click the button *Sign In*.
+### 2. Perform the following
+Choose the option *Token*, paste *TOKEN_HERE* into the input box and click the button *Sign In*.
 
-3.  The dashboard may then show up as follows:
+### 3. The dashboard may then show up as follows
 
 ![dashboard-home](resources/dashboard-home.png)
 
-4.  We can also verify our created master-1 and node-1 by going to the Nodes page:
+### 4. We can also verify our created *master-1* and *node-1* by going to the **Nodes** sub-menu:
 
 ![kube-nodes](resources/kube-nodes.png)
 
