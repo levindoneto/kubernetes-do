@@ -74,26 +74,21 @@ You must get something like this:
 
 ## Install and run the Dashboard
 1.  Donwload the Dashboard (Link updated in 01/2019)
+
+This action may be performed from your local machine if you have already configured *kubectl* and the *config* from master on it.
+More details can be accessed on the section *How to Access the Cluster from a Local Machine** a little bit up in this readme :)
 ```
-$ kubectl create -f https://raw.githubusercontent.com/kubernetes/dashboard/master/aio/deploy/recommended/kubernetes-dashboard.yaml --namespace=kube-system
+$ kubectl create -f dashboard/dashboard-admin.yaml --namespace=kube-system
 ```
 
-2.  Set it up
+2.  Init the proxy
 ```
-$ vi dashboard-admin.yaml
-```
-Copy the content from [dashboard-admin.yaml](dashboard/dashboard-admin.yaml) and paste it in the created file.
-
-```
-$ kubectl create -f dashboard-admin.yaml --validate=false
+$ kubectl proxy
 ```
 
-3.  For getting the Kubernetes proxy command to run in the background:
-```
-$ nohup kubectl proxy --address="157.230.190.111" -p 443 --accept-hosts='^*$' &
-```
+After this, you may locally access the dashboard by simply going to [this link](http://localhost:8001/api/v1/namespaces/kube-system/services/https:kubernetes-dashboard:/proxy/#!/login).
 
-4.  This error may appear if you have not configured properly the dashboard-admin file:
+3.  This error may appear if you have not configured properly the dashboard-admin file:
 ```json
 {
   "kind": "Status",
