@@ -9,6 +9,9 @@ Repository containing some theory about Kubernetes and how to set up a master an
 ## Theory
 TO DO.
 
+## Create Droplets
+TO DO.
+
 ## Set Up a Master
 Follow the steps on the [Master Config](master-config.sh) on the Master droplet.
 
